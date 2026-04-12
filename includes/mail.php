@@ -45,7 +45,9 @@ function sendConfirmationEmail(string $name, string $email, int $slotTime): bool
 ・参加費は当日現金でのお支払いとなります
 
 ご不明な点がございましたら、X（Twitter）のDMまでお問い合わせください。
-
+@shun_rubber
+もしくは
+オルタフェティッシュ市川哲也070-5087-9619
 ━━━━━━━━━━━━━━━━━━━━━━━
 本メールは自動送信です。
 EOT;

@@ -1,18 +1,10 @@
 <?php
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-/**
- * Encode a UTF-8 string for use in email headers (RFC 2047 Base64).
- * Falls back to a pure-PHP implementation if mbstring is unavailable.
- */
-function encodeMimeHeader(string $str): string
-{
-    if (function_exists('mb_encode_mimeheader')) {
-        return mb_encode_mimeheader($str, 'UTF-8', 'B');
-    }
-    return '=?UTF-8?B?' . base64_encode($str) . '?=';
-}
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
 function sendConfirmationEmail(string $name, string $email, int $slotTime): bool
 {
@@ -52,17 +44,31 @@ function sendConfirmationEmail(string $name, string $email, int $slotTime): bool
 本メールは自動送信です。
 EOT;
 
-    $fromName = encodeMimeHeader(MAIL_FROM_NAME);
-    $headers = implode("\r\n", [
-        'From: ' . $fromName . ' <' . MAIL_FROM . '>',
-        'Reply-To: ' . MAIL_FROM,
-        'Content-Type: text/plain; charset=UTF-8',
-        'Content-Transfer-Encoding: base64',
-        'MIME-Version: 1.0',
-    ]);
+    $mail = new PHPMailer(true);
 
-    $encodedSubject = encodeMimeHeader($subject);
-    $encodedBody = base64_encode($body);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
+        $mail->SMTPSecure = SMTP_SECURE === 'ssl'
+            ? PHPMailer::ENCRYPTION_SMTPS
+            : PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+        $mail->CharSet    = 'UTF-8';
+        $mail->Encoding   = 'base64';
 
-    return @mail($email, $encodedSubject, $encodedBody, $headers);
+        $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
+        $mail->addReplyTo(MAIL_FROM, MAIL_FROM_NAME);
+        $mail->addAddress($email, $name);
+
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
+
+        return $mail->send();
+    } catch (PHPMailerException $e) {
+        error_log('[PHPMailer] ' . $mail->ErrorInfo);
+        return false;
+    }
 }

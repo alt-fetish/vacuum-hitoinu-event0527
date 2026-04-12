@@ -16,6 +16,14 @@ define('ADMIN_PASS_HASH', '$2y$10$REPLACE_WITH_REAL_HASH');
 define('MAIL_FROM', 'noreply@example.com');
 define('MAIL_FROM_NAME', 'バキューム&人犬体験会');
 
+// --- SMTP (さくらインターネット) ---
+// さくらのコントロールパネルで作成したメールアカウントを使う
+define('SMTP_HOST', 'xxxx.sakura.ne.jp');       // 初期ドメイン
+define('SMTP_PORT', 587);                        // 587 = STARTTLS
+define('SMTP_USER', 'noreply@example.com');      // メールアドレス全体
+define('SMTP_PASS', 'SMTP_PASSWORD_HERE');       // さくらで設定したパスワード
+define('SMTP_SECURE', 'tls');                    // 'tls' (STARTTLS) or 'ssl' (465ポート)
+
 // --- Event constants ---
 define('EVENT_TITLE', 'バキューム&人犬体験会');
 define('EVENT_DATE', '2025年5月27日（土）');

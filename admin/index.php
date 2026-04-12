@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/functions.php';
 
 $loggedIn = !empty($_SESSION['admin_logged_in']);
 $loginError = getFlash('login_error');
+$adminMsg = getFlash('admin_msg');
 
 if ($loggedIn) {
     $db = getDB();
@@ -80,6 +81,10 @@ $csrfToken = generateCsrfToken();
         <?php endforeach; ?>
     </div>
 
+    <?php if ($adminMsg): ?>
+        <div class="msg msg-success"><?= h($adminMsg) ?></div>
+    <?php endif; ?>
+
     <!-- Actions -->
     <div class="admin-actions">
         <a href="export.php" class="btn btn-secondary" style="padding:8px 16px; font-size:0.85rem;">CSV ダウンロード</a>
@@ -100,6 +105,7 @@ $csrfToken = generateCsrfToken();
                         <th>メール</th>
                         <th>X ID</th>
                         <th>申込日時</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,6 +117,13 @@ $csrfToken = generateCsrfToken();
                             <td><?= h($r['email']) ?></td>
                             <td><?= $r['x_account'] ? '@' . h($r['x_account']) : '-' ?></td>
                             <td><?= h($r['created_at']) ?></td>
+                            <td>
+                                <form action="delete.php" method="POST" onsubmit="return confirm('予約 #<?= (int)$r['id'] ?> (<?= h($r['name']) ?>) を削除します。よろしいですか？');" style="margin:0;">
+                                    <?= csrfField() ?>
+                                    <input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
+                                    <button type="submit" class="btn btn-danger" style="padding:4px 10px; font-size:0.8rem;">削除</button>
+                                </form>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

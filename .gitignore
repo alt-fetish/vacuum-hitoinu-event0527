@@ -3,7 +3,8 @@ data/*.sqlite3
 data/*.sqlite
 data/*.db
 
-# Local config override
+# Local/production config (secrets). config.sample.php をひな型として使う
+includes/config.php
 includes/config.local.php
 
 # OS / Editor

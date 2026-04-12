@@ -1,0 +1,18 @@
+# Local SQLite DB (本番データを壊さないため絶対にコミットしない)
+data/*.sqlite3
+data/*.sqlite
+data/*.db
+
+# Local config override
+includes/config.local.php
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log

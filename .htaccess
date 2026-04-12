@@ -1,0 +1,20 @@
+# Disable directory listing
+Options -Indexes
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Protect includes directory
+<FilesMatch "^includes/">
+    Deny from all
+</FilesMatch>
+
+# Block access to SQLite files
+<FilesMatch "\.sqlite3$">
+    Deny from all
+</FilesMatch>

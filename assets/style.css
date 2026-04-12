@@ -1,0 +1,398 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+
+:root {
+    --bg: #0d0d0d;
+    --bg-card: #1a1a2e;
+    --bg-input: #16213e;
+    --purple: #7b2ff7;
+    --purple-light: #9d5cff;
+    --purple-glow: rgba(123, 47, 247, 0.3);
+    --green: #00c853;
+    --red: #ff1744;
+    --gray: #555;
+    --text: #e8e8e8;
+    --text-muted: #999;
+    --border: #2a2a4a;
+    --radius: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+a { color: var(--purple-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* --- Hero --- */
+.hero {
+    text-align: center;
+    padding: 48px 16px 32px;
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #16213e 100%);
+    border-bottom: 1px solid var(--border);
+}
+.hero-date {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--purple-light);
+    letter-spacing: 0.05em;
+}
+.hero-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 8px 0 4px;
+}
+.hero-venue {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* --- Section --- */
+.section {
+    padding: 32px 0;
+}
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--purple);
+    display: inline-block;
+}
+
+/* --- Info cards --- */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+}
+.info-card dt {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+.info-card dd {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* --- Slot grid --- */
+.slot-group-title {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 16px 0 8px;
+    font-weight: 500;
+}
+.slot-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.slot-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s;
+}
+.slot-card:hover { border-color: var(--purple); }
+.slot-card.is-full {
+    opacity: 0.5;
+    border-color: var(--border);
+}
+.slot-time {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+.slot-remaining {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+.pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+.pill-ok {
+    background: rgba(0, 200, 83, 0.15);
+    color: var(--green);
+    border: 1px solid rgba(0, 200, 83, 0.3);
+}
+.pill-full {
+    background: rgba(255, 23, 68, 0.1);
+    color: var(--red);
+    border: 1px solid rgba(255, 23, 68, 0.2);
+}
+
+/* --- Form --- */
+.form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-top: 8px;
+}
+.field {
+    margin-bottom: 20px;
+}
+.field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+.field .hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+.field input[type="text"],
+.field input[type="email"],
+.field select {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+.field input:focus,
+.field select:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px var(--purple-glow);
+}
+.field select option {
+    background: var(--bg-input);
+    color: var(--text);
+}
+
+/* Radio group for slot selection */
+.slot-radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.slot-radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    font-size: 0.9rem;
+}
+.slot-radio-group label:hover { border-color: var(--purple); }
+.slot-radio-group input[type="radio"]:checked + span {
+    color: var(--purple-light);
+}
+.slot-radio-group label.is-full {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.slot-radio-group input[type="radio"] {
+    accent-color: var(--purple);
+}
+
+/* --- Buttons --- */
+.btn {
+    display: inline-block;
+    padding: 12px 32px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-align: center;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary {
+    background: var(--purple);
+    color: #fff;
+    width: 100%;
+}
+.btn-primary:hover { background: var(--purple-light); }
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--purple); }
+
+/* --- Messages --- */
+.msg {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+.msg-error {
+    background: rgba(255, 23, 68, 0.1);
+    border: 1px solid rgba(255, 23, 68, 0.3);
+    color: #ff6b6b;
+}
+.msg-success {
+    background: rgba(0, 200, 83, 0.1);
+    border: 1px solid rgba(0, 200, 83, 0.3);
+    color: var(--green);
+}
+
+/* --- Thanks page --- */
+.thanks-card {
+    background: var(--bg-card);
+    border: 1px solid var(--purple);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    margin-top: 24px;
+}
+.thanks-card h1 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--purple-light);
+}
+.thanks-detail {
+    text-align: left;
+    background: var(--bg-input);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+}
+.thanks-detail dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+}
+.thanks-detail dt {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+.thanks-detail dd {
+    font-weight: 500;
+}
+
+/* --- Admin --- */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+}
+.admin-header h1 { font-size: 1.1rem; }
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    text-align: center;
+}
+.stat-card .stat-num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--purple-light);
+}
+.stat-card .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+.admin-table th,
+.admin-table td {
+    padding: 10px 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+.admin-table th {
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+.admin-table tr:hover td { background: rgba(123, 47, 247, 0.05); }
+
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.login-form {
+    max-width: 360px;
+    margin: 80px auto;
+}
+
+/* --- Footer --- */
+.footer {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+    .hero-date { font-size: 2.2rem; }
+    .hero-title { font-size: 1.2rem; }
+    .info-grid { grid-template-columns: 1fr; }
+    .slot-list { grid-template-columns: 1fr; }
+    .slot-radio-group { grid-template-columns: 1fr; }
+    .admin-table { font-size: 0.75rem; }
+    .admin-table th, .admin-table td { padding: 8px 4px; }
+    .form-card { padding: 16px; }
+    .admin-stats { grid-template-columns: 1fr 1fr; }
+}
+
+/* --- Utility --- */
+.text-center { text-align: center; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.table-wrap { overflow-x: auto; }

@@ -20,12 +20,8 @@ if (!defined('EVENT_DAYS')) {
         ],
     ]);
 }
-if (!defined('EVENT_DATE')) {
-    define('EVENT_DATE', '2026年6月27日（土）・28日（日）');
-}
-if (!defined('EVENT_DATE_SHORT')) {
-    define('EVENT_DATE_SHORT', '6.27 ／ 6.28');
-}
+// EVENT_DATE / EVENT_DATE_SHORT は本番のconfig.phpに古い値が残っているため、
+// 定数に依存せずEVENT_DAYSから動的に算出する。下記の getEventDateLong() / getEventDateShort() を使うこと。
 
 // --- Output escaping ---
 function h(string $s): string
@@ -59,6 +55,22 @@ function validateCsrfToken(?string $token): bool
 function csrfField(): string
 {
     return '<input type="hidden" name="csrf_token" value="' . h(generateCsrfToken()) . '">';
+}
+
+// --- Event date display helpers (EVENT_DAYSから動的算出) ---
+function getEventDateLong(): string
+{
+    if (empty(EVENT_DAYS)) {
+        return '';
+    }
+    $year = (int)substr(EVENT_DAYS[0]['date'], 0, 4);
+    $labels = array_column(EVENT_DAYS, 'label');
+    return $year . '年' . implode('・', $labels);
+}
+
+function getEventDateShort(): string
+{
+    return implode(' ／ ', array_column(EVENT_DAYS, 'short'));
 }
 
 // --- Slot helpers ---

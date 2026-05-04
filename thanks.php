@@ -52,7 +52,7 @@ unset($_SESSION['last_reservation']);
 </div>
 
 <footer class="footer">
-    <p><?= h(EVENT_TITLE) ?> | <?= h(EVENT_DATE) ?></p>
+    <p><?= h(EVENT_TITLE) ?> | <?= h(getEventDateLong()) ?></p>
 </footer>
 
 </body>

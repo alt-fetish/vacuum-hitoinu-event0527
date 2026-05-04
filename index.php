@@ -13,14 +13,14 @@ $csrfToken = generateCsrfToken();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= h(EVENT_TITLE) ?> | <?= h(EVENT_DATE) ?></title>
+    <title><?= h(EVENT_TITLE) ?> | <?= h(getEventDateLong()) ?></title>
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
 <!-- Hero -->
 <div class="hero">
-    <div class="hero-date"><?= h(EVENT_DATE_SHORT) ?></div>
+    <div class="hero-date"><?= h(getEventDateShort()) ?></div>
     <h1 class="hero-title"><?= h(EVENT_TITLE) ?></h1>
     <p class="hero-venue"><?= h(EVENT_VENUE) ?></p>
 </div>
@@ -37,7 +37,7 @@ $csrfToken = generateCsrfToken();
             <div class="info-card">
                 <dl>
                     <dt>開催日</dt>
-                    <dd><?= h(EVENT_DATE) ?></dd>
+                    <dd><?= h(getEventDateLong()) ?></dd>
                 </dl>
             </div>
             <div class="info-card">
@@ -226,7 +226,7 @@ $csrfToken = generateCsrfToken();
 </div>
 
 <footer class="footer">
-    <p><?= h(EVENT_TITLE) ?> | <?= h(EVENT_DATE) ?></p>
+    <p><?= h(EVENT_TITLE) ?> | <?= h(getEventDateLong()) ?></p>
     <p class="mt-16"><a href="admin/">管理画面</a></p>
 </footer>
 

@@ -48,44 +48,95 @@ function slotPeriod(int $hour): string
     return $hour < 13 ? '午前' : '午後';
 }
 
+// 指定日付のEVENT_DAYSエントリを返す。無ければnull。
+function findEventDay(string $date): ?array
+{
+    foreach (EVENT_DAYS as $day) {
+        if ($day['date'] === $date) {
+            return $day;
+        }
+    }
+    return null;
+}
+
+// 日付+時刻が有効な開催枠か
+function isValidSlot(string $date, int $hour): bool
+{
+    $day = findEventDay($date);
+    if (!$day) {
+        return false;
+    }
+    return in_array($hour, $day['hours'], true);
+}
+
+// "2026-06-27|10" 形式を解析。失敗時はnull。
+function parseSlotValue(?string $value): ?array
+{
+    if ($value === null) {
+        return null;
+    }
+    if (!preg_match('/^(\d{4}-\d{2}-\d{2})\|(\d{1,2})$/', $value, $m)) {
+        return null;
+    }
+    return ['date' => $m[1], 'hour' => (int)$m[2]];
+}
+
+// "2026-06-27|10" 形式を構築
+function slotValue(string $date, int $hour): string
+{
+    return $date . '|' . $hour;
+}
+
+// 全日全枠の予約数を [date][hour] => count で返す
 function getSlotCounts(): array
 {
     $db = getDB();
-    $stmt = $db->query('SELECT slot_time, COUNT(*) as cnt FROM reservations GROUP BY slot_time');
+    $stmt = $db->query('SELECT slot_date, slot_time, COUNT(*) as cnt FROM reservations GROUP BY slot_date, slot_time');
+
     $counts = [];
-    foreach (SLOT_HOURS as $h) {
-        $counts[$h] = 0;
+    foreach (EVENT_DAYS as $day) {
+        foreach ($day['hours'] as $hour) {
+            $counts[$day['date']][$hour] = 0;
+        }
     }
     while ($row = $stmt->fetch()) {
-        $counts[(int)$row['slot_time']] = (int)$row['cnt'];
+        $counts[$row['slot_date']][(int)$row['slot_time']] = (int)$row['cnt'];
     }
     return $counts;
 }
 
-function getSlotAvailability(): array
+// 各日のslot情報（残数等）を含めた配列を返す
+function getEventDaysWithAvailability(): array
 {
     $counts = getSlotCounts();
-    $slots = [];
-    foreach (SLOT_HOURS as $hour) {
-        $booked = $counts[$hour];
-        $remaining = SLOT_CAPACITY - $booked;
-        $slots[$hour] = [
-            'hour'      => $hour,
-            'label'     => slotLabel($hour),
-            'period'    => slotPeriod($hour),
-            'booked'    => $booked,
-            'remaining' => $remaining,
-            'available' => $remaining > 0,
-        ];
+    $days = [];
+    foreach (EVENT_DAYS as $day) {
+        $slots = [];
+        foreach ($day['hours'] as $hour) {
+            $booked = $counts[$day['date']][$hour] ?? 0;
+            $remaining = SLOT_CAPACITY - $booked;
+            $slots[] = [
+                'date'      => $day['date'],
+                'hour'      => $hour,
+                'label'     => slotLabel($hour),
+                'period'    => slotPeriod($hour),
+                'value'     => slotValue($day['date'], $hour),
+                'booked'    => $booked,
+                'remaining' => $remaining,
+                'available' => $remaining > 0,
+            ];
+        }
+        $day['slots'] = $slots;
+        $days[] = $day;
     }
-    return $slots;
+    return $days;
 }
 
-function isSlotAvailable(int $hour): bool
+function isSlotAvailable(string $date, int $hour): bool
 {
     $db = getDB();
-    $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM reservations WHERE slot_time = ?');
-    $stmt->execute([$hour]);
+    $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM reservations WHERE slot_date = ? AND slot_time = ?');
+    $stmt->execute([$date, $hour]);
     $row = $stmt->fetch();
     return (int)$row['cnt'] < SLOT_CAPACITY;
 }
@@ -120,10 +171,15 @@ function validateReservation(array $data): array
         }
     }
 
-    // Slot time
-    $slot_time = (int)($data['slot_time'] ?? 0);
-    if (!in_array($slot_time, SLOT_HOURS, true)) {
-        $errors[] = '有効な時間枠を選択してください。';
+    // Slot (date|hour)
+    $slot = parseSlotValue($data['slot'] ?? null);
+    if (!$slot || !isValidSlot($slot['date'], $slot['hour'])) {
+        $errors[] = '有効な日時枠を選択してください。';
+        $slot_date = '';
+        $slot_time = 0;
+    } else {
+        $slot_date = $slot['date'];
+        $slot_time = $slot['hour'];
     }
 
     return [
@@ -131,6 +187,7 @@ function validateReservation(array $data): array
         'name'      => $name,
         'email'     => $email,
         'x_account' => $x_account,
+        'slot_date' => $slot_date,
         'slot_time' => $slot_time,
     ];
 }

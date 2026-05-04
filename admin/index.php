@@ -12,11 +12,21 @@ if ($loggedIn) {
     // Total count
     $totalCount = (int)$db->query('SELECT COUNT(*) FROM reservations')->fetchColumn();
 
-    // Per-slot counts
+    // Per-(date, slot) counts
     $slotCounts = getSlotCounts();
 
-    // All reservations
-    $stmt = $db->query('SELECT * FROM reservations ORDER BY slot_time ASC, created_at ASC');
+    // 日ごとの予約数合計
+    $dayTotals = [];
+    foreach (EVENT_DAYS as $day) {
+        $sum = 0;
+        foreach ($day['hours'] as $hour) {
+            $sum += $slotCounts[$day['date']][$hour] ?? 0;
+        }
+        $dayTotals[$day['date']] = $sum;
+    }
+
+    // All reservations (新しい順 = 日付・時刻昇順)
+    $stmt = $db->query('SELECT * FROM reservations ORDER BY slot_date ASC, slot_time ASC, created_at ASC');
     $reservations = $stmt->fetchAll();
 }
 
@@ -67,19 +77,38 @@ $csrfToken = generateCsrfToken();
         <a href="logout.php" class="btn btn-secondary" style="padding:8px 16px; font-size:0.85rem;">ログアウト</a>
     </div>
 
-    <!-- Stats -->
+    <!-- 全体統計 -->
     <div class="admin-stats">
         <div class="stat-card">
             <div class="stat-num"><?= $totalCount ?></div>
             <div class="stat-label">総予約数</div>
         </div>
-        <?php foreach (SLOT_HOURS as $hour): ?>
+        <?php foreach (EVENT_DAYS as $day): ?>
             <div class="stat-card">
-                <div class="stat-num"><?= $slotCounts[$hour] ?>/<?= SLOT_CAPACITY ?></div>
-                <div class="stat-label"><?= $hour ?>:00</div>
+                <div class="stat-num"><?= $dayTotals[$day['date']] ?></div>
+                <div class="stat-label"><?= h($day['short']) ?> 計</div>
             </div>
         <?php endforeach; ?>
     </div>
+
+    <!-- 日別 × 時間枠 統計 -->
+    <?php foreach (EVENT_DAYS as $day): ?>
+        <div class="day-block">
+            <div class="day-block-header">
+                <span class="day-block-date"><?= h($day['short']) ?></span>
+                <span class="day-block-label"><?= h($day['label']) ?></span>
+            </div>
+            <div class="admin-stats" style="margin-bottom:0;">
+                <?php foreach ($day['hours'] as $hour): ?>
+                    <?php $cnt = $slotCounts[$day['date']][$hour] ?? 0; ?>
+                    <div class="stat-card">
+                        <div class="stat-num"><?= $cnt ?>/<?= SLOT_CAPACITY ?></div>
+                        <div class="stat-label"><?= $hour ?>:00</div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
 
     <?php if ($adminMsg): ?>
         <div class="msg msg-success"><?= h($adminMsg) ?></div>
@@ -100,6 +129,7 @@ $csrfToken = generateCsrfToken();
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>日付</th>
                         <th>時間枠</th>
                         <th>名前</th>
                         <th>メール</th>
@@ -110,8 +140,13 @@ $csrfToken = generateCsrfToken();
                 </thead>
                 <tbody>
                     <?php foreach ($reservations as $r): ?>
+                        <?php
+                        $rDayInfo = findEventDay($r['slot_date']);
+                        $rDayShort = $rDayInfo['short'] ?? $r['slot_date'];
+                        ?>
                         <tr>
                             <td><?= (int)$r['id'] ?></td>
+                            <td><?= h($rDayShort) ?></td>
                             <td><?= h(slotLabel((int)$r['slot_time'])) ?></td>
                             <td><?= h($r['name']) ?></td>
                             <td><?= h($r['email']) ?></td>

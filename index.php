@@ -2,9 +2,10 @@
 session_start();
 require_once __DIR__ . '/includes/functions.php';
 
-$slots = getSlotAvailability();
+$days = getEventDaysWithAvailability();
 $errors = getFlash('errors');
 $formData = getFlash('form_data', []);
+$selectedSlotValue = $formData['slot'] ?? '';
 $csrfToken = generateCsrfToken();
 ?>
 <!DOCTYPE html>
@@ -63,40 +64,63 @@ $csrfToken = generateCsrfToken();
     <!-- Slot Availability -->
     <div class="section">
         <h2 class="section-title">空き状況</h2>
+        <p class="hint mb-16">ご希望の枠をタップすると、下のフォームの該当枠が自動選択されます。</p>
 
-        <p class="slot-group-title">午前の部</p>
-        <div class="slot-list">
-            <?php foreach ($slots as $s): ?>
-                <?php if ($s['period'] !== '午前') continue; ?>
-                <div class="slot-card <?= $s['available'] ? '' : 'is-full' ?>"
-                     <?php if ($s['available']): ?>onclick="selectSlot(<?= $s['hour'] ?>)" style="cursor:pointer"<?php endif; ?>>
-                    <div>
-                        <span class="slot-time"><?= h($s['label']) ?></span>
-                        <span class="slot-remaining">（残り <?= $s['remaining'] ?>/<?= SLOT_CAPACITY ?>）</span>
-                    </div>
-                    <span class="pill <?= $s['available'] ? 'pill-ok' : 'pill-full' ?>">
-                        <?= $s['available'] ? '受付中' : '満席' ?>
-                    </span>
+        <?php foreach ($days as $day): ?>
+            <div class="day-block">
+                <div class="day-block-header">
+                    <span class="day-block-date"><?= h($day['short']) ?></span>
+                    <span class="day-block-label"><?= h($day['label']) ?></span>
                 </div>
-            <?php endforeach; ?>
-        </div>
 
-        <p class="slot-group-title">午後の部</p>
-        <div class="slot-list">
-            <?php foreach ($slots as $s): ?>
-                <?php if ($s['period'] !== '午後') continue; ?>
-                <div class="slot-card <?= $s['available'] ? '' : 'is-full' ?>"
-                     <?php if ($s['available']): ?>onclick="selectSlot(<?= $s['hour'] ?>)" style="cursor:pointer"<?php endif; ?>>
-                    <div>
-                        <span class="slot-time"><?= h($s['label']) ?></span>
-                        <span class="slot-remaining">（残り <?= $s['remaining'] ?>/<?= SLOT_CAPACITY ?>）</span>
+                <?php
+                $hasAm = false;
+                $hasPm = false;
+                foreach ($day['slots'] as $s) {
+                    if ($s['period'] === '午前') $hasAm = true;
+                    if ($s['period'] === '午後') $hasPm = true;
+                }
+                ?>
+
+                <?php if ($hasAm): ?>
+                    <p class="slot-group-title">午前の部</p>
+                    <div class="slot-list">
+                        <?php foreach ($day['slots'] as $s): ?>
+                            <?php if ($s['period'] !== '午前') continue; ?>
+                            <div class="slot-card <?= $s['available'] ? '' : 'is-full' ?>"
+                                 <?php if ($s['available']): ?>onclick="selectSlot('<?= h($s['value']) ?>')" style="cursor:pointer"<?php endif; ?>>
+                                <div>
+                                    <span class="slot-time"><?= h($s['label']) ?></span>
+                                    <span class="slot-remaining">（残 <?= $s['remaining'] ?>/<?= SLOT_CAPACITY ?>）</span>
+                                </div>
+                                <span class="pill <?= $s['available'] ? 'pill-ok' : 'pill-full' ?>">
+                                    <?= $s['available'] ? '受付中' : '満席' ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                    <span class="pill <?= $s['available'] ? 'pill-ok' : 'pill-full' ?>">
-                        <?= $s['available'] ? '受付中' : '満席' ?>
-                    </span>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php endif; ?>
+
+                <?php if ($hasPm): ?>
+                    <p class="slot-group-title">午後の部</p>
+                    <div class="slot-list">
+                        <?php foreach ($day['slots'] as $s): ?>
+                            <?php if ($s['period'] !== '午後') continue; ?>
+                            <div class="slot-card <?= $s['available'] ? '' : 'is-full' ?>"
+                                 <?php if ($s['available']): ?>onclick="selectSlot('<?= h($s['value']) ?>')" style="cursor:pointer"<?php endif; ?>>
+                                <div>
+                                    <span class="slot-time"><?= h($s['label']) ?></span>
+                                    <span class="slot-remaining">（残 <?= $s['remaining'] ?>/<?= SLOT_CAPACITY ?>）</span>
+                                </div>
+                                <span class="pill <?= $s['available'] ? 'pill-ok' : 'pill-full' ?>">
+                                    <?= $s['available'] ? '受付中' : '満席' ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
     </div>
 
     <!-- Reservation Form -->
@@ -118,31 +142,57 @@ $csrfToken = generateCsrfToken();
                 <?= csrfField() ?>
 
                 <div class="field">
-                    <label for="slot_time">希望時間枠 <span style="color:var(--red)">*</span></label>
-                    <p class="slot-group-title mb-8">午前の部</p>
-                    <div class="slot-radio-group">
-                        <?php foreach ($slots as $s): ?>
-                            <?php if ($s['period'] !== '午前') continue; ?>
-                            <label id="slot-radio-<?= $s['hour'] ?>" class="<?= $s['available'] ? '' : 'is-full' ?>">
-                                <input type="radio" name="slot_time" value="<?= $s['hour'] ?>"
-                                    <?= ($formData['slot_time'] ?? '') == $s['hour'] ? 'checked' : '' ?>
-                                    <?= $s['available'] ? '' : 'disabled' ?>>
-                                <span><?= h($s['label']) ?> （残<?= $s['remaining'] ?>）</span>
-                            </label>
-                        <?php endforeach; ?>
-                    </div>
-                    <p class="slot-group-title mb-8">午後の部</p>
-                    <div class="slot-radio-group">
-                        <?php foreach ($slots as $s): ?>
-                            <?php if ($s['period'] !== '午後') continue; ?>
-                            <label id="slot-radio-<?= $s['hour'] ?>" class="<?= $s['available'] ? '' : 'is-full' ?>">
-                                <input type="radio" name="slot_time" value="<?= $s['hour'] ?>"
-                                    <?= ($formData['slot_time'] ?? '') == $s['hour'] ? 'checked' : '' ?>
-                                    <?= $s['available'] ? '' : 'disabled' ?>>
-                                <span><?= h($s['label']) ?> （残<?= $s['remaining'] ?>）</span>
-                            </label>
-                        <?php endforeach; ?>
-                    </div>
+                    <label>希望日時 <span style="color:var(--red)">*</span></label>
+
+                    <?php foreach ($days as $day): ?>
+                        <div class="day-block day-block-form">
+                            <div class="day-block-header">
+                                <span class="day-block-date"><?= h($day['short']) ?></span>
+                                <span class="day-block-label"><?= h($day['label']) ?></span>
+                            </div>
+
+                            <?php
+                            $hasAm = false;
+                            $hasPm = false;
+                            foreach ($day['slots'] as $s) {
+                                if ($s['period'] === '午前') $hasAm = true;
+                                if ($s['period'] === '午後') $hasPm = true;
+                            }
+                            ?>
+
+                            <?php if ($hasAm): ?>
+                                <p class="slot-group-title mb-8">午前の部</p>
+                                <div class="slot-radio-group">
+                                    <?php foreach ($day['slots'] as $s): ?>
+                                        <?php if ($s['period'] !== '午前') continue; ?>
+                                        <label id="slot-radio-<?= h(str_replace(['-', '|'], '_', $s['value'])) ?>"
+                                               class="<?= $s['available'] ? '' : 'is-full' ?>">
+                                            <input type="radio" name="slot" value="<?= h($s['value']) ?>"
+                                                <?= $selectedSlotValue === $s['value'] ? 'checked' : '' ?>
+                                                <?= $s['available'] ? '' : 'disabled' ?>>
+                                            <span><?= h($s['label']) ?> （残<?= $s['remaining'] ?>）</span>
+                                        </label>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($hasPm): ?>
+                                <p class="slot-group-title mb-8 <?= $hasAm ? 'mt-16' : '' ?>">午後の部</p>
+                                <div class="slot-radio-group">
+                                    <?php foreach ($day['slots'] as $s): ?>
+                                        <?php if ($s['period'] !== '午後') continue; ?>
+                                        <label id="slot-radio-<?= h(str_replace(['-', '|'], '_', $s['value'])) ?>"
+                                               class="<?= $s['available'] ? '' : 'is-full' ?>">
+                                            <input type="radio" name="slot" value="<?= h($s['value']) ?>"
+                                                <?= $selectedSlotValue === $s['value'] ? 'checked' : '' ?>
+                                                <?= $s['available'] ? '' : 'disabled' ?>>
+                                            <span><?= h($s['label']) ?> （残<?= $s['remaining'] ?>）</span>
+                                        </label>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <div class="field">
@@ -181,8 +231,9 @@ $csrfToken = generateCsrfToken();
 </footer>
 
 <script>
-function selectSlot(hour) {
-    var label = document.getElementById('slot-radio-' + hour);
+function selectSlot(value) {
+    var id = 'slot-radio-' + value.replace(/[-|]/g, '_');
+    var label = document.getElementById(id);
     if (!label) return;
     var radio = label.querySelector('input[type="radio"]');
     if (radio && !radio.disabled) {

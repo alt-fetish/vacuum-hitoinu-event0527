@@ -22,16 +22,19 @@ $errors = $result['errors'];
 $name = $result['name'];
 $email = $result['email'];
 $x_account = $result['x_account'];
+$slot_date = $result['slot_date'];
 $slot_time = $result['slot_time'];
+
+$flashFormData = [
+    'name'      => $name,
+    'email'     => $email,
+    'x_account' => $x_account,
+    'slot'      => ($slot_date && $slot_time) ? slotValue($slot_date, $slot_time) : '',
+];
 
 if (!empty($errors)) {
     setFlash('errors', $errors);
-    setFlash('form_data', [
-        'name'      => $name,
-        'email'     => $email,
-        'x_account' => $x_account,
-        'slot_time' => $slot_time,
-    ]);
+    setFlash('form_data', $flashFormData);
     header('Location: index.php#reserve');
     exit;
 }
@@ -42,26 +45,21 @@ try {
     $db->exec('BEGIN IMMEDIATE');
 
     // Check capacity
-    $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM reservations WHERE slot_time = ?');
-    $stmt->execute([$slot_time]);
+    $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM reservations WHERE slot_date = ? AND slot_time = ?');
+    $stmt->execute([$slot_date, $slot_time]);
     $count = (int)$stmt->fetch()['cnt'];
 
     if ($count >= SLOT_CAPACITY) {
         $db->exec('ROLLBACK');
-        setFlash('errors', ['申し訳ありません。選択された時間枠は満席になりました。別の枠をお選びください。']);
-        setFlash('form_data', [
-            'name'      => $name,
-            'email'     => $email,
-            'x_account' => $x_account,
-            'slot_time' => $slot_time,
-        ]);
+        setFlash('errors', ['申し訳ありません。選択された日時枠は満席になりました。別の枠をお選びください。']);
+        setFlash('form_data', $flashFormData);
         header('Location: index.php#reserve');
         exit;
     }
 
     // Insert
-    $stmt = $db->prepare('INSERT INTO reservations (name, email, x_account, slot_time) VALUES (?, ?, ?, ?)');
-    $stmt->execute([$name, $email, $x_account ?: null, $slot_time]);
+    $stmt = $db->prepare('INSERT INTO reservations (name, email, x_account, slot_date, slot_time) VALUES (?, ?, ?, ?, ?)');
+    $stmt->execute([$name, $email, $x_account ?: null, $slot_date, $slot_time]);
 
     $db->exec('COMMIT');
 } catch (PDOException $e) {
@@ -69,28 +67,26 @@ try {
 
     // Duplicate check (UNIQUE constraint violation)
     if (strpos($e->getMessage(), 'UNIQUE constraint failed') !== false) {
-        setFlash('errors', ['同じメールアドレスで同じ時間枠の予約が既に存在します。']);
+        setFlash('errors', ['同じメールアドレスで同じ日時枠の予約が既に存在します。']);
     } else {
         setFlash('errors', ['予約処理中にエラーが発生しました。しばらくしてからもう一度お試しください。']);
     }
-    setFlash('form_data', [
-        'name'      => $name,
-        'email'     => $email,
-        'x_account' => $x_account,
-        'slot_time' => $slot_time,
-    ]);
+    setFlash('form_data', $flashFormData);
     header('Location: index.php#reserve');
     exit;
 }
 
 // Send confirmation email (non-blocking: if mail fails, reservation still succeeds)
-sendConfirmationEmail($name, $email, $slot_time);
+sendConfirmationEmail($name, $email, $slot_date, $slot_time);
 
 // Store for thanks page
+$dayInfo = findEventDay($slot_date);
 $_SESSION['last_reservation'] = [
-    'name'      => $name,
-    'email'     => $email,
-    'slot_time' => $slot_time,
+    'name'       => $name,
+    'email'      => $email,
+    'slot_date'  => $slot_date,
+    'slot_time'  => $slot_time,
+    'day_label'  => $dayInfo['label'] ?? $slot_date,
     'slot_label' => slotLabel($slot_time),
 ];
 

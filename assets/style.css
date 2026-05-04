@@ -43,10 +43,11 @@ a:hover { text-decoration: underline; }
     border-bottom: 1px solid var(--border);
 }
 .hero-date {
-    font-size: 3rem;
+    font-size: 2.6rem;
     font-weight: 700;
     color: var(--purple-light);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
 }
 .hero-title {
     font-size: 1.5rem;
@@ -94,12 +95,47 @@ a:hover { text-decoration: underline; }
     font-weight: 500;
 }
 
+/* --- Day block (multi-day) --- */
+.day-block {
+    background: linear-gradient(180deg, rgba(123, 47, 247, 0.06) 0%, rgba(123, 47, 247, 0) 100%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--purple);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 20px;
+}
+.day-block-form {
+    background: rgba(13, 13, 13, 0.4);
+}
+.day-block-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+.day-block-date {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--purple-light);
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+.day-block-label {
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 500;
+}
+
 /* --- Slot grid --- */
 .slot-group-title {
     font-size: 0.9rem;
     color: var(--text-muted);
     margin: 16px 0 8px;
     font-weight: 500;
+}
+.day-block .slot-group-title:first-child {
+    margin-top: 0;
 }
 .slot-list {
     display: grid;
@@ -385,7 +421,7 @@ a:hover { text-decoration: underline; }
 
 /* --- Responsive --- */
 @media (max-width: 640px) {
-    .hero-date { font-size: 2.2rem; }
+    .hero-date { font-size: 1.9rem; }
     .hero-title { font-size: 1.2rem; }
     .info-grid { grid-template-columns: 1fr; }
     .slot-list { grid-template-columns: 1fr; }
@@ -394,6 +430,8 @@ a:hover { text-decoration: underline; }
     .admin-table th, .admin-table td { padding: 8px 4px; }
     .form-card { padding: 16px; }
     .admin-stats { grid-template-columns: 1fr 1fr; }
+    .day-block { padding: 14px; }
+    .day-block-date { font-size: 1.4rem; }
 }
 
 /* --- Utility --- */

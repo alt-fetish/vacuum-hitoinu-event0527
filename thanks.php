@@ -28,7 +28,7 @@ unset($_SESSION['last_reservation']);
                     <dt>体験</dt>
                     <dd>バキュームベッド＆人犬体験</dd>
                     <dt>日時</dt>
-                    <dd><?= h(EVENT_DATE) ?> <?= h($reservation['slot_label']) ?></dd>
+                    <dd><?= h($reservation['day_label']) ?> <?= h($reservation['slot_label']) ?></dd>
                     <dt>会場</dt>
                     <dd><?= h(EVENT_VENUE) ?></dd>
                     <dt>参加費</dt>

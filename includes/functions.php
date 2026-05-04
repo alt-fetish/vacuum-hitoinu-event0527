@@ -2,6 +2,31 @@
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/db.php';
 
+// 本番サーバ側の config.php に EVENT_DAYS が未定義の場合のフォールバック。
+// （includes/config.php は .gitignore でデプロイ対象外のため、新規定数はここで担保する）
+if (!defined('EVENT_DAYS')) {
+    define('EVENT_DAYS', [
+        [
+            'date'  => '2026-06-27',
+            'label' => '6月27日（土）',
+            'short' => '6.27',
+            'hours' => [10, 11, 12, 14, 15, 16, 17, 18],
+        ],
+        [
+            'date'  => '2026-06-28',
+            'label' => '6月28日（日）',
+            'short' => '6.28',
+            'hours' => [15, 16, 17, 18],
+        ],
+    ]);
+}
+if (!defined('EVENT_DATE')) {
+    define('EVENT_DATE', '2026年6月27日（土）・28日（日）');
+}
+if (!defined('EVENT_DATE_SHORT')) {
+    define('EVENT_DATE_SHORT', '6.27 ／ 6.28');
+}
+
 // --- Output escaping ---
 function h(string $s): string
 {

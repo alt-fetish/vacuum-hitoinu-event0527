@@ -24,18 +24,18 @@ function sendConfirmationEmail(
     $rubberTrialLabel = $rubberTrial ? '希望する' : '希望しない';
     $notesText = $notes !== '' ? $notes : 'なし';
 
-    $subject = '【バキューム&人犬体験会】ご予約確認 - ' . $shortLabel . ' ' . $slotLabelStr . 'の枠';
+    $subject = '【バキューム&ヒトイヌ体験会】ご予約確認 - ' . $shortLabel . ' ' . $slotLabelStr . 'の枠';
 
     $body = <<<EOT
 {$name} 様
 
-バキューム&人犬体験会へのご予約ありがとうございます。
+バキューム&ヒトイヌ体験会へのご予約ありがとうございます。
 以下の内容で予約を承りました。
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 ■ 予約内容
 ━━━━━━━━━━━━━━━━━━━━━━━
-体験：バキュームベッド＆人犬体験（セット）
+体験：バキュームベッド･キューブ＆ヒトイヌ体験（セット）
 ラバースーツ試着：{$rubberTrialLabel}
 備考：{$notesText}
 日時：{$dayLabel} {$slotLabelStr}

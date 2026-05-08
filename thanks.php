@@ -26,7 +26,7 @@ unset($_SESSION['last_reservation']);
                     <dt>お名前</dt>
                     <dd><?= h($reservation['name']) ?></dd>
                     <dt>体験</dt>
-                    <dd>バキュームベッド＆人犬体験</dd>
+                    <dd>バキュームベッド･キューブ＆ヒトイヌ体験</dd>
                     <dt>ラバースーツ試着</dt>
                     <dd><?= !empty($reservation['rubber_trial']) ? '希望する' : '希望しない' ?></dd>
                     <?php if (!empty($reservation['notes'])): ?>

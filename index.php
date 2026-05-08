@@ -7,13 +7,14 @@ $errors = getFlash('errors');
 $formData = getFlash('form_data', []);
 $selectedSlotValue = $formData['slot'] ?? '';
 $csrfToken = generateCsrfToken();
+$reservationPageTitle = 'バキューム＆ヒトイヌ体験会予約ページ';
 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= h(EVENT_TITLE) ?> | <?= h(getEventDateLong()) ?></title>
+    <title><?= h($reservationPageTitle) ?> | <?= h(getEventDateLong()) ?></title>
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -21,7 +22,8 @@ $csrfToken = generateCsrfToken();
 <!-- Hero -->
 <div class="hero">
     <div class="hero-date"><?= h(getEventDateShort()) ?></div>
-    <h1 class="hero-title"><?= h(EVENT_TITLE) ?></h1>
+    <h1 class="hero-title"><?= h($reservationPageTitle) ?></h1>
+    <p class="mt-16"><a href="lp0627/" class="btn btn-secondary">イベントページに戻る</a></p>
     <p class="hero-venue"><?= h(EVENT_VENUE) ?></p>
 </div>
 
@@ -30,8 +32,8 @@ $csrfToken = generateCsrfToken();
     <!-- Event Info -->
     <div class="section">
         <h2 class="section-title">イベント概要</h2>
-        <p>バキュームベッドと人犬、2つの体験がセットで楽しめるスペシャルイベント。<br>
-        全身を包み込むバキュームベッドの圧迫感と、人犬プレイの非日常をぜひ体感してください。</p>
+        <p>バキュームベッドとヒトイヌ、2つの体験がセットで楽しめるスペシャルイベント。<br>
+        全身を包み込むバキュームベッドの圧迫感と、ヒトイヌプレイの非日常をぜひ体感してください。</p>
 
         <div class="info-grid mt-16">
             <div class="info-card">
@@ -218,6 +220,22 @@ $csrfToken = generateCsrfToken();
                     <p class="hint">任意</p>
                 </div>
 
+                <div class="field">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="rubber_trial" value="1"
+                            <?= !empty($formData['rubber_trial']) ? 'checked' : '' ?>>
+                        <span>ラバースーツ試着を希望する</span>
+                    </label>
+                    <p class="hint">事前別途申込が必要です</p>
+                </div>
+
+                <div class="field">
+                    <label for="notes">備考欄</label>
+                    <textarea id="notes" name="notes" rows="5" maxlength="650"
+                              placeholder="ラバースーツ試着希望の方は、身長・体重・スリーサイズをご記入ください"><?= h($formData['notes'] ?? '') ?></textarea>
+                    <p class="hint">任意</p>
+                </div>
+
                 <button type="submit" class="btn btn-primary">予約する</button>
             </form>
         </div>
@@ -226,7 +244,7 @@ $csrfToken = generateCsrfToken();
 </div>
 
 <footer class="footer">
-    <p><?= h(EVENT_TITLE) ?> | <?= h(getEventDateLong()) ?></p>
+    <p><?= h($reservationPageTitle) ?> | <?= h(getEventDateLong()) ?></p>
     <p class="mt-16"><a href="admin/">管理画面</a></p>
 </footer>
 

@@ -208,6 +208,7 @@ a:hover { text-decoration: underline; }
 }
 .field input[type="text"],
 .field input[type="email"],
+.field textarea,
 .field select {
     width: 100%;
     padding: 10px 12px;
@@ -220,14 +221,31 @@ a:hover { text-decoration: underline; }
     transition: border-color 0.2s;
 }
 .field input:focus,
+.field textarea:focus,
 .field select:focus {
     outline: none;
     border-color: var(--purple);
     box-shadow: 0 0 0 3px var(--purple-glow);
 }
+.field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
 .field select option {
     background: var(--bg-input);
     color: var(--text);
+}
+
+.checkbox-label {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--purple);
 }
 
 /* Radio group for slot selection */

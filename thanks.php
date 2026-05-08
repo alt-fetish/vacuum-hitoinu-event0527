@@ -27,6 +27,12 @@ unset($_SESSION['last_reservation']);
                     <dd><?= h($reservation['name']) ?></dd>
                     <dt>体験</dt>
                     <dd>バキュームベッド＆人犬体験</dd>
+                    <dt>ラバースーツ試着</dt>
+                    <dd><?= !empty($reservation['rubber_trial']) ? '希望する' : '希望しない' ?></dd>
+                    <?php if (!empty($reservation['notes'])): ?>
+                        <dt>備考</dt>
+                        <dd><?= nl2br(h($reservation['notes'])) ?></dd>
+                    <?php endif; ?>
                     <dt>日時</dt>
                     <dd><?= h($reservation['day_label']) ?> <?= h($reservation['slot_label']) ?></dd>
                     <dt>会場</dt>

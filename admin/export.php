@@ -20,7 +20,7 @@ header('Content-Disposition: attachment; filename="' . $filename . '"');
 echo "\xEF\xBB\xBF";
 
 $out = fopen('php://output', 'w');
-fputcsv($out, ['ID', '日付', '時間枠', '名前', 'メール', 'X ID', '申込日時']);
+fputcsv($out, ['ID', '日付', '時間枠', '名前', 'メール', 'X ID', 'ラバー試着', '備考', '申込日時']);
 
 foreach ($reservations as $r) {
     $dayInfo = findEventDay($r['slot_date']);
@@ -32,6 +32,8 @@ foreach ($reservations as $r) {
         $r['name'],
         $r['email'],
         $r['x_account'] ? '@' . $r['x_account'] : '',
+        !empty($r['rubber_trial']) ? '希望' : '',
+        $r['notes'],
         $r['created_at'],
     ]);
 }

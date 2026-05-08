@@ -134,6 +134,8 @@ $csrfToken = generateCsrfToken();
                         <th>名前</th>
                         <th>メール</th>
                         <th>X ID</th>
+                        <th>ラバー試着</th>
+                        <th>備考</th>
                         <th>申込日時</th>
                         <th>操作</th>
                     </tr>
@@ -151,6 +153,8 @@ $csrfToken = generateCsrfToken();
                             <td><?= h($r['name']) ?></td>
                             <td><?= h($r['email']) ?></td>
                             <td><?= $r['x_account'] ? '@' . h($r['x_account']) : '-' ?></td>
+                            <td><?= !empty($r['rubber_trial']) ? '希望' : '-' ?></td>
+                            <td><?= $r['notes'] !== '' ? nl2br(h($r['notes'])) : '-' ?></td>
                             <td><?= h($r['created_at']) ?></td>
                             <td>
                                 <form action="delete.php" method="POST" onsubmit="return confirm('予約 #<?= (int)$r['id'] ?> (<?= h($r['name']) ?>) を削除します。よろしいですか？');" style="margin:0;">

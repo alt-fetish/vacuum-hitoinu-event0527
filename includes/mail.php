@@ -6,7 +6,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
-function sendConfirmationEmail(string $name, string $email, string $slotDate, int $slotTime): bool
+function sendConfirmationEmail(
+    string $name,
+    string $email,
+    string $slotDate,
+    int $slotTime,
+    int $rubberTrial = 0,
+    string $notes = ''
+): bool
 {
     $dayInfo = findEventDay($slotDate);
     $dayLabel = $dayInfo['label'] ?? $slotDate;
@@ -14,6 +21,8 @@ function sendConfirmationEmail(string $name, string $email, string $slotDate, in
     $slotLabelStr = slotLabel($slotTime);
     $formattedPrice = number_format(EVENT_PRICE);
     $eventVenue = EVENT_VENUE;
+    $rubberTrialLabel = $rubberTrial ? '希望する' : '希望しない';
+    $notesText = $notes !== '' ? $notes : 'なし';
 
     $subject = '【バキューム&人犬体験会】ご予約確認 - ' . $shortLabel . ' ' . $slotLabelStr . 'の枠';
 
@@ -27,6 +36,8 @@ function sendConfirmationEmail(string $name, string $email, string $slotDate, in
 ■ 予約内容
 ━━━━━━━━━━━━━━━━━━━━━━━
 体験：バキュームベッド＆人犬体験（セット）
+ラバースーツ試着：{$rubberTrialLabel}
+備考：{$notesText}
 日時：{$dayLabel} {$slotLabelStr}
 会場：{$eventVenue}
 参加費：¥{$formattedPrice}

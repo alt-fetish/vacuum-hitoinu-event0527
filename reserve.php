@@ -22,14 +22,18 @@ $errors = $result['errors'];
 $name = $result['name'];
 $email = $result['email'];
 $x_account = $result['x_account'];
+$rubber_trial = $result['rubber_trial'];
+$notes = $result['notes'];
 $slot_date = $result['slot_date'];
 $slot_time = $result['slot_time'];
 
 $flashFormData = [
-    'name'      => $name,
-    'email'     => $email,
-    'x_account' => $x_account,
-    'slot'      => ($slot_date && $slot_time) ? slotValue($slot_date, $slot_time) : '',
+    'name'         => $name,
+    'email'        => $email,
+    'x_account'    => $x_account,
+    'rubber_trial' => $rubber_trial,
+    'notes'        => $notes,
+    'slot'         => ($slot_date && $slot_time) ? slotValue($slot_date, $slot_time) : '',
 ];
 
 if (!empty($errors)) {
@@ -58,8 +62,11 @@ try {
     }
 
     // Insert
-    $stmt = $db->prepare('INSERT INTO reservations (name, email, x_account, slot_date, slot_time) VALUES (?, ?, ?, ?, ?)');
-    $stmt->execute([$name, $email, $x_account ?: null, $slot_date, $slot_time]);
+    $stmt = $db->prepare('
+        INSERT INTO reservations (name, email, x_account, rubber_trial, notes, slot_date, slot_time)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ');
+    $stmt->execute([$name, $email, $x_account ?: null, $rubber_trial, $notes, $slot_date, $slot_time]);
 
     $db->exec('COMMIT');
 } catch (PDOException $e) {
@@ -77,7 +84,7 @@ try {
 }
 
 // Send confirmation email (non-blocking: if mail fails, reservation still succeeds)
-sendConfirmationEmail($name, $email, $slot_date, $slot_time);
+sendConfirmationEmail($name, $email, $slot_date, $slot_time, $rubber_trial, $notes);
 
 // Store for thanks page
 $dayInfo = findEventDay($slot_date);
@@ -86,6 +93,8 @@ $_SESSION['last_reservation'] = [
     'email'      => $email,
     'slot_date'  => $slot_date,
     'slot_time'  => $slot_time,
+    'rubber_trial' => $rubber_trial,
+    'notes'      => $notes,
     'day_label'  => $dayInfo['label'] ?? $slot_date,
     'slot_label' => slotLabel($slot_time),
 ];

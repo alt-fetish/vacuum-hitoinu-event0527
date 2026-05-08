@@ -208,6 +208,15 @@ function validateReservation(array $data): array
         }
     }
 
+    // Rubber suit trial request (optional)
+    $rubber_trial = !empty($data['rubber_trial']) ? 1 : 0;
+
+    // Notes (optional)
+    $notes = trim($data['notes'] ?? '');
+    if (strlen($notes) > 2000) { // ~650 UTF-8 chars
+        $errors[] = '備考欄は650文字以内で入力してください。';
+    }
+
     // Slot (date|hour)
     $slot = parseSlotValue($data['slot'] ?? null);
     if (!$slot || !isValidSlot($slot['date'], $slot['hour'])) {
@@ -224,6 +233,8 @@ function validateReservation(array $data): array
         'name'      => $name,
         'email'     => $email,
         'x_account' => $x_account,
+        'rubber_trial' => $rubber_trial,
+        'notes'     => $notes,
         'slot_date' => $slot_date,
         'slot_time' => $slot_time,
     ];

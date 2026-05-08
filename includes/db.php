@@ -26,6 +26,8 @@ function getDB(): PDO
             name       TEXT    NOT NULL,
             email      TEXT    NOT NULL,
             x_account  TEXT    DEFAULT NULL,
+            rubber_trial INTEGER NOT NULL DEFAULT 0,
+            notes      TEXT    NOT NULL DEFAULT '',
             slot_date  TEXT    NOT NULL,
             slot_time  INTEGER NOT NULL CHECK (slot_time IN (10,11,12,14,15,16,17,18)),
             created_at TEXT    NOT NULL DEFAULT (datetime('now','localtime')),
@@ -52,6 +54,8 @@ function getDB(): PDO
                     name       TEXT    NOT NULL,
                     email      TEXT    NOT NULL,
                     x_account  TEXT    DEFAULT NULL,
+                    rubber_trial INTEGER NOT NULL DEFAULT 0,
+                    notes      TEXT    NOT NULL DEFAULT '',
                     slot_date  TEXT    NOT NULL,
                     slot_time  INTEGER NOT NULL CHECK (slot_time IN (10,11,12,14,15,16,17,18)),
                     created_at TEXT    NOT NULL DEFAULT (datetime('now','localtime')),
@@ -59,8 +63,8 @@ function getDB(): PDO
                 )
             ");
             $pdo->exec("
-                INSERT INTO reservations (id, name, email, x_account, slot_date, slot_time, created_at)
-                SELECT id, name, email, x_account, '2026-06-27', slot_time, created_at
+                INSERT INTO reservations (id, name, email, x_account, rubber_trial, notes, slot_date, slot_time, created_at)
+                SELECT id, name, email, x_account, 0, '', '2026-06-27', slot_time, created_at
                 FROM reservations_legacy
             ");
             $pdo->exec('DROP TABLE reservations_legacy');
@@ -69,6 +73,15 @@ function getDB(): PDO
             $pdo->exec('ROLLBACK');
             throw $e;
         }
+    }
+
+    $cols = $pdo->query("PRAGMA table_info(reservations)")->fetchAll();
+    $columnNames = array_column($cols, 'name');
+    if (!in_array('rubber_trial', $columnNames, true)) {
+        $pdo->exec('ALTER TABLE reservations ADD COLUMN rubber_trial INTEGER NOT NULL DEFAULT 0');
+    }
+    if (!in_array('notes', $columnNames, true)) {
+        $pdo->exec("ALTER TABLE reservations ADD COLUMN notes TEXT NOT NULL DEFAULT ''");
     }
 
     return $pdo;

@@ -226,7 +226,7 @@ $reservationPageTitle = 'バキューム＆ヒトイヌ体験会予約ページ'
                             <?= !empty($formData['rubber_trial']) ? 'checked' : '' ?>>
                         <span>ラバースーツ試着を希望する</span>
                     </label>
-                    <p class="hint">事前別途申込が必要です</p>
+                    <p class="hint">別途5,000円かかります。事前の打ち合わせが必要です。ラバースーツ数に限りがあり、抽選となります</p>
                 </div>
 
                 <div class="field">

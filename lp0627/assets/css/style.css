@@ -258,7 +258,7 @@ h3 {
 .section {
   width: min(100% - 40px, var(--container));
   margin: 0 auto;
-  padding: 76px 0;
+  padding: 44px 0 56px;
 }
 
 .section__header {
@@ -400,7 +400,7 @@ h3 {
 }
 
 .final-cta {
-  padding: 70px 20px 120px;
+  padding: 44px 20px 104px;
   text-align: center;
 }
 
@@ -471,6 +471,10 @@ h3 {
     font-size: 2rem;
   }
 
+  .section {
+    padding: 76px 0;
+  }
+
   .festival__inner,
   .final-cta__inner {
     padding: 72px;
@@ -494,6 +498,10 @@ h3 {
 
   .time-list {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .final-cta {
+    padding: 70px 20px 120px;
   }
 
   .fixed-cta {

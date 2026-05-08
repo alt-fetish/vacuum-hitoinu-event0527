@@ -85,6 +85,7 @@ try {
 
 // Send confirmation email (non-blocking: if mail fails, reservation still succeeds)
 sendConfirmationEmail($name, $email, $slot_date, $slot_time, $rubber_trial, $notes);
+sendAdminNotificationEmail($name, $email, $x_account, $slot_date, $slot_time, $rubber_trial, $notes);
 
 // Store for thanks page
 $dayInfo = findEventDay($slot_date);

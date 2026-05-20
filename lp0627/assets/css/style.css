@@ -232,6 +232,10 @@ h3 {
   font-weight: 800;
 }
 
+.event-meta dd span {
+  display: block;
+}
+
 .button {
   display: inline-flex;
   align-items: center;

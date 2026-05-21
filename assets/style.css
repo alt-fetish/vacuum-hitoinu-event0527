@@ -235,6 +235,12 @@ a:hover { text-decoration: underline; }
     background: var(--bg-input);
     color: var(--text);
 }
+.form-submit-note {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 12px;
+    text-align: center;
+}
 
 .checkbox-label {
     display: flex !important;
@@ -361,6 +367,31 @@ a:hover { text-decoration: underline; }
 }
 .thanks-detail dd {
     font-weight: 500;
+}
+
+/* --- Privacy policy --- */
+.policy-page {
+    padding: 48px 0;
+}
+.policy-copy {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+}
+.policy-copy p + p,
+.policy-copy ul + p {
+    margin-top: 20px;
+}
+.policy-copy ul {
+    margin-top: 16px;
+    padding-left: 1.4em;
+}
+.policy-copy li + li {
+    margin-top: 4px;
+}
+.policy-manager {
+    font-weight: 700;
 }
 
 /* --- Admin --- */

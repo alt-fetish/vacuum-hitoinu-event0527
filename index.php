@@ -237,6 +237,7 @@ $reservationPageTitle = 'バキューム＆ヒトイヌ体験会予約ページ'
                 </div>
 
                 <button type="submit" class="btn btn-primary">予約する</button>
+                <p class="form-submit-note">この情報は当イベント主催団体のシステム担当法人fatigue,Inc.(alt-fetish)に送信されます</p>
             </form>
         </div>
     </div>
@@ -245,6 +246,7 @@ $reservationPageTitle = 'バキューム＆ヒトイヌ体験会予約ページ'
 
 <footer class="footer">
     <p><?= h($reservationPageTitle) ?> | <?= h(getEventDateLong()) ?></p>
+    <p class="mt-16"><a href="privacy-policy.php" target="_blank" rel="noopener">個人情報保護方針</a></p>
     <p class="mt-16"><a href="admin/">管理画面</a></p>
 </footer>
 

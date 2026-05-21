@@ -198,10 +198,10 @@ $reservationPageTitle = 'バキューム＆ヒトイヌ体験会予約ページ'
                 </div>
 
                 <div class="field">
-                    <label for="name">お名前 <span style="color:var(--red)">*</span></label>
+                    <label for="name">お名前（当日受付でお客様を同定する目的で使用） <span style="color:var(--red)">*</span></label>
                     <input type="text" id="name" name="name" required maxlength="100"
                            value="<?= h($formData['name'] ?? '') ?>"
-                           placeholder="例：田中太郎">
+                           placeholder="例：「田中太郎」「タローマン」">
                 </div>
 
                 <div class="field">

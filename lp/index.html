@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>バキューム & ヒトイヌ 驚異のコラボ大体験会 in 芳賀書店6階</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reggae+One&family=Noto+Sans+JP:wght@400;500;700;900&family=Bangers&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#fbf8f1;
+    --ink:#1a1a1a;
+    --accent-1:#3fb6b6;       /* teal */
+    --accent-1-soft:#cdeded;
+    --accent-2:#f5d623;       /* yellow */
+    --accent-2-soft:#fff4b3;
+    --accent-3:#e0432b;       /* red */
+    --accent-3-soft:#ffe2dd;
+  }
+  html,body{margin:0;padding:0;background:#1a1a1a;font-family:"Noto Sans JP",sans-serif;color:var(--ink);}
+  .stage{
+    min-height:100vh;
+    display:flex;justify-content:center;
+    background:
+      radial-gradient(ellipse at top, #2a2a2a, #0d0d0d 70%);
+    padding:0;
+  }
+  .phone{
+    width:100%;
+    max-width:430px;
+    background:var(--paper);
+    box-shadow:0 0 80px #000a;
+    overflow:hidden;
+    position:relative;
+  }
+  /* utility: keep absolute children inside */
+  section{position:relative;}
+  a{color:inherit;}
+  /* small selection */
+  ::selection{background:var(--accent-2);color:var(--ink);}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="stage"><div id="root"></div></div>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="lp.jsx"></script>
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "palette": "original",
+  "halftone": true,
+  "bookingUrl": "#"
+}/*EDITMODE-END*/;
+
+const PALETTES = {
+  original: { "--accent-1":"#3fb6b6", "--accent-1-soft":"#cdeded", "--accent-2":"#f5d623", "--accent-2-soft":"#fff4b3", "--accent-3":"#e0432b", "--accent-3-soft":"#ffe2dd" },
+  pink:     { "--accent-1":"#e85a8a", "--accent-1-soft":"#ffd6e2", "--accent-2":"#f5d623", "--accent-2-soft":"#fff4b3", "--accent-3":"#2a2a2a", "--accent-3-soft":"#dddddd" },
+  midnight: { "--accent-1":"#2a2a2a", "--accent-1-soft":"#999", "--accent-2":"#f5d623", "--accent-2-soft":"#fff4b3", "--accent-3":"#e0432b", "--accent-3-soft":"#ffe2dd" },
+};
+
+const { TweaksPanel, TweakSection, TweakRadio, TweakToggle, TweakText, useTweaks } = window;
+const App = () => {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  React.useEffect(()=>{
+    const p = PALETTES[t.palette] || PALETTES.original;
+    Object.entries(p).forEach(([k,v])=>document.documentElement.style.setProperty(k,v));
+  },[t.palette]);
+  React.useEffect(()=>{
+    document.querySelectorAll(".halftone").forEach(el=>el.style.display = t.halftone?"":"none");
+  },[t.halftone]);
+  return (
+    <>
+      <window.LP bookingUrl={t.bookingUrl}/>
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="カラーテーマ">
+          <TweakRadio label="パレット" value={t.palette}
+            options={[{value:"original",label:"original"},{value:"pink",label:"pink"},{value:"midnight",label:"midnight"}]}
+            onChange={(v)=>setTweak("palette",v)}/>
+        </TweakSection>
+        <TweakSection label="演出">
+          <TweakToggle label="ハーフトーン背景" value={t.halftone} onChange={(v)=>setTweak("halftone",v)}/>
+        </TweakSection>
+        <TweakSection label="リンク">
+          <TweakText label="予約サイトURL" value={t.bookingUrl} onChange={(v)=>setTweak("bookingUrl",v)}/>
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+};
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

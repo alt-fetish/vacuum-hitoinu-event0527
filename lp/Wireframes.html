@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>LP ワイヤーフレーム / バキューム＆ヒトイヌ体験会</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Yomogi&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  :root{
+    --ink:#1a1a1a;
+    --paper:#fbf8f1;
+    --line:#2a2a2a;
+    --muted:#9a958a;
+    --teal:#3fb6b6;
+    --yellow:#f5d623;
+    --red:#e0432b;
+  }
+  html,body{margin:0;padding:0;background:#e9e6df;font-family:"Zen Kurenaido","Yomogi","Kalam",sans-serif;color:var(--ink);}
+  .wf{
+    background:var(--paper);
+    border:2px solid var(--line);
+    border-radius:6px;
+    box-sizing:border-box;
+    padding:14px;
+    font-family:"Zen Kurenaido","Yomogi",sans-serif;
+    color:var(--ink);
+    line-height:1.45;
+    font-size:13px;
+    overflow:hidden;
+    position:relative;
+  }
+  .wf *{box-sizing:border-box;}
+  .wf h1,.wf h2,.wf h3,.wf h4{margin:0;font-family:"Kalam","Zen Kurenaido",sans-serif;font-weight:700;}
+  .wf .stack{display:flex;flex-direction:column;gap:10px;}
+  .wf .row{display:flex;gap:8px;}
+  .wf .box{border:1.5px dashed var(--line);border-radius:4px;padding:8px;background:#fff;}
+  .wf .box.solid{border-style:solid;}
+  .wf .label{font-size:10px;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;font-family:"Kalam",sans-serif;}
+  .wf .sectionLabel{
+    display:inline-block;border:1.5px solid var(--line);padding:2px 8px;border-radius:99px;font-size:10px;
+    background:#fff;color:var(--ink);font-family:"Kalam",sans-serif;font-weight:700;letter-spacing:.05em;
+  }
+  .wf .img{
+    background:repeating-linear-gradient(45deg,#eee 0 6px,#fff 6px 12px);
+    border:1.5px solid var(--line);border-radius:4px;
+    display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;
+    font-family:"Kalam",sans-serif;
+  }
+  .wf .placeholder{height:60px;}
+  .wf .scribble{
+    background:repeating-linear-gradient(0deg,transparent 0 3px,#0001 3px 4px);
+    border-radius:3px;
+  }
+  .wf .pill{display:inline-block;border:1.5px solid var(--line);border-radius:99px;padding:4px 10px;background:#fff;font-size:11px;}
+  .wf .heroBurst{
+    position:relative;
+    background:
+      radial-gradient(circle at 60% 50%, #fff 0 18%, transparent 19%),
+      conic-gradient(from 0deg, #f5d62355 0 10deg, transparent 10deg 30deg, #f5d62355 30deg 40deg, transparent 40deg 60deg, #f5d62355 60deg 70deg, transparent 70deg 90deg, #f5d62355 90deg 100deg, transparent 100deg 120deg, #f5d62355 120deg 130deg, transparent 130deg 150deg, #f5d62355 150deg 160deg, transparent 160deg 180deg, #f5d62355 180deg 190deg, transparent 190deg 210deg, #f5d62355 210deg 220deg, transparent 220deg 240deg, #f5d62355 240deg 250deg, transparent 250deg 270deg, #f5d62355 270deg 280deg, transparent 280deg 300deg, #f5d62355 300deg 310deg, transparent 310deg 330deg, #f5d62355 330deg 340deg, transparent 340deg 360deg),
+      radial-gradient(circle at 50% 50%, #3fb6b633 0 50%, #3fb6b622 50% 100%);
+    border:2px solid var(--line);
+    border-radius:6px;
+    padding:18px;
+    overflow:hidden;
+  }
+  .wf .burstTitle{
+    font-family:"Kalam",sans-serif;font-weight:700;font-size:22px;
+    color:var(--red);
+    -webkit-text-stroke:1px var(--line);
+    line-height:1.1;
+    transform:rotate(-2deg);
+    display:inline-block;
+  }
+  .wf .speech{
+    background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 12px;
+    position:relative;font-family:"Kalam",sans-serif;font-weight:700;
+  }
+  .wf .speech:after{
+    content:"";position:absolute;bottom:-10px;left:30px;width:14px;height:14px;
+    background:#fff;border-right:2px solid var(--line);border-bottom:2px solid var(--line);
+    transform:rotate(45deg);
+  }
+  .wf .cta{
+    background:#fff;border:2px solid var(--line);border-radius:99px;
+    padding:10px 16px;text-align:center;font-family:"Kalam",sans-serif;font-weight:700;
+    box-shadow:3px 3px 0 var(--line);
+  }
+  .wf .cta.red{background:#ffe2dd;}
+  .wf .cta.yellow{background:#fff4b3;}
+  .wf .cta.teal{background:#cdeded;}
+  .wf .divider{height:0;border-top:2px dashed var(--line);margin:4px 0;}
+  .wf .panel{
+    border:2px solid var(--line);border-radius:4px;background:#fff;padding:10px;position:relative;
+    box-shadow:3px 3px 0 #0002;
+  }
+  .wf .panel .panelHead{
+    display:inline-block;background:var(--line);color:#fff;font-family:"Kalam",sans-serif;font-weight:700;
+    padding:2px 8px;font-size:11px;margin-bottom:6px;
+  }
+  .wf .checklist li{margin:2px 0;}
+  .wf ul{margin:4px 0;padding-left:18px;}
+  .wf .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .wf .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+  .wf .timeslot{
+    border:1.5px solid var(--line);border-radius:3px;padding:4px 6px;background:#fff;
+    font-size:11px;font-family:"Kalam",sans-serif;
+  }
+  .wf .navBar{
+    display:flex;gap:4px;border-top:2px solid var(--line);border-bottom:2px solid var(--line);
+    padding:6px 0;background:#fff;justify-content:space-between;
+  }
+  .wf .navBar .tab{flex:1;text-align:center;font-size:10px;border-right:1.5px dashed var(--line);padding:4px;font-family:"Kalam",sans-serif;}
+  .wf .navBar .tab:last-child{border-right:none;}
+  .wf .navBar .tab.active{background:var(--yellow);font-weight:700;}
+  .wf .stickyNav{
+    position:sticky;top:0;background:#fff;border:2px solid var(--line);border-radius:4px;padding:6px;
+    box-shadow:2px 2px 0 var(--line);
+  }
+  .wf .accord{
+    border:1.5px solid var(--line);border-radius:4px;background:#fff;
+  }
+  .wf .accord .item{
+    border-bottom:1.5px dashed var(--line);padding:8px;display:flex;justify-content:space-between;align-items:center;
+    font-family:"Kalam",sans-serif;font-weight:700;font-size:12px;
+  }
+  .wf .accord .item:last-child{border-bottom:none;}
+  .wf .accord .item .plus{font-size:14px;color:var(--muted);}
+  .wf .footer{border-top:2px solid var(--line);padding-top:8px;text-align:center;color:var(--muted);font-size:11px;}
+  .wf .colored.teal{background:#cdeded;}
+  .wf .colored.yellow{background:#fff4b3;}
+  .wf .colored.red{background:#ffe2dd;}
+  .wf .stamp{
+    display:inline-block;border:2px solid var(--red);color:var(--red);padding:2px 6px;
+    font-family:"Kalam",sans-serif;font-weight:700;transform:rotate(-6deg);font-size:11px;
+  }
+  .wf .annot{
+    font-family:"Kalam",sans-serif;color:#c14a35;font-size:11px;
+  }
+  .wf .annot:before{content:"↳ ";}
+  .legend{
+    background:var(--paper);border:2px solid var(--line);border-radius:6px;padding:18px 24px;
+    font-family:"Zen Kurenaido",sans-serif;
+  }
+  .legend h2{font-family:"Kalam",sans-serif;margin:0 0 8px;font-size:22px;}
+  .legend p{margin:0 0 4px;font-size:14px;line-height:1.55;}
+  .legend .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .legend .chip{background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:4px 12px;font-size:13px;font-family:"Kalam",sans-serif;}
+  .legend .swatch{display:inline-block;width:14px;height:14px;border:1.5px solid var(--line);border-radius:3px;vertical-align:-2px;margin-right:4px;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel">
+const { DesignCanvas, DCSection, DCArtboard } = window;
+
+/* ---------- shared building blocks ---------- */
+const HeroBurst = ({title="バキューム&ヒトイヌ\n驚異のコラボ大体験会", sub="in 芳賀書店 6階"}) => (
+  <div className="heroBurst stack">
+    <div className="label">＜ヒーロー / アメコミバースト＞</div>
+    <div style={{textAlign:"center",padding:"10px 0"}}>
+      <div className="speech" style={{display:"inline-block",marginBottom:14}}>6月28日に開催の<br/>ぴたけっと応援企画</div>
+      <div className="burstTitle">バキューム<br/>＆ ヒトイヌ<br/>大体験会</div>
+      <div style={{marginTop:8,fontFamily:"Kalam",fontWeight:700}}>in 芳賀書店6階</div>
+    </div>
+    <div className="row" style={{justifyContent:"center"}}>
+      <div className="img" style={{width:50,height:50,borderRadius:"50%"}}>img</div>
+      <div className="img" style={{width:50,height:50,borderRadius:"50%"}}>img</div>
+    </div>
+    <div className="row" style={{justifyContent:"center",gap:14}}>
+      <div style={{textAlign:"center",fontSize:11}}>担当: Shun</div>
+      <div style={{textAlign:"center",fontSize:11}}>担当: リンリン</div>
+    </div>
+    <div className="box solid colored yellow" style={{textAlign:"center"}}>
+      <div style={{fontFamily:"Kalam",fontWeight:700}}>開催日</div>
+      <div style={{fontSize:12}}>6/27 (土) 10:00 – 19:00</div>
+      <div style={{fontSize:12}}>6/28 (日) 15:00 – 18:00</div>
+    </div>
+  </div>
+);
+
+const Disclaimer = () => (
+  <div className="box" style={{fontSize:10,color:"#666"}}>
+    ※名称利用については事前に許可をいただいています。<br/>
+    ※『ぴたけっと』とは無関係です。ぴたけっとへのお問い合わせはご遠慮ください。
+  </div>
+);
+
+const ScheduleBlock = () => (
+  <div className="stack">
+    <div className="sectionLabel">体験タイムテーブル</div>
+    <div className="grid2">
+      <div className="box">
+        <div className="label" style={{marginBottom:4}}>6/27 (土) ・ 全8部</div>
+        <div className="stack" style={{gap:3}}>
+          {["10:00","11:00","12:00","14:00","15:00","16:00","17:00","18:00"].map((t,i)=>(
+            <div className="timeslot" key={i}>第{i+1}部 {t}〜</div>
+          ))}
+        </div>
+      </div>
+      <div className="box">
+        <div className="label" style={{marginBottom:4}}>6/28 (日) ・ 全4部</div>
+        <div className="stack" style={{gap:3}}>
+          {["15:00","16:00","17:00","18:00"].map((t,i)=>(
+            <div className="timeslot" key={i}>第{i+1}部 {t}〜</div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div className="annot">10min/max × 2set / 予約サイトのみ受付</div>
+  </div>
+);
+
+const AccessBlock = () => (
+  <div className="stack">
+    <div className="sectionLabel">会場 / Access</div>
+    <div className="box">
+      <div style={{fontWeight:700}}>芳賀書店ビル 6F</div>
+      <div style={{fontSize:11}}>〒101-0051 東京都千代田区神田神保町 2-7</div>
+      <div className="stamp" style={{marginTop:6}}>神保町駅 A1 徒歩 0 秒</div>
+    </div>
+    <div className="row">
+      <div className="img" style={{flex:1,height:80}}>フロア見取り図</div>
+      <div className="img" style={{flex:1,height:80}}>入口写真</div>
+    </div>
+  </div>
+);
+
+const ItemsBlock = () => (
+  <div className="stack">
+    <div className="sectionLabel">持ち物 / Items</div>
+    <div className="box">
+      <div style={{fontWeight:700,marginBottom:4}}>全員</div>
+      <ul style={{margin:0}}><li>タオル</li><li>お飲み物</li></ul>
+      <div className="divider"></div>
+      <div style={{fontWeight:700,marginBottom:4}}>コスチューム着用</div>
+      <ul style={{margin:0}}><li>コスチューム</li></ul>
+      <div className="divider"></div>
+      <div style={{fontWeight:700,marginBottom:4}}>普段着</div>
+      <ul style={{margin:0}}><li>汚れてもいい下着 / 靴下</li></ul>
+    </div>
+  </div>
+);
+
+const ConditionsBlock = () => (
+  <div className="stack">
+    <div className="sectionLabel">参加条件</div>
+    <div className="grid2">
+      <div className="box" style={{textAlign:"center"}}><div className="label">体重</div><div style={{fontWeight:700}}>85kg 以下</div></div>
+      <div className="box" style={{textAlign:"center"}}><div className="label">身長</div><div style={{fontWeight:700}}>2m 以下</div></div>
+      <div className="box" style={{textAlign:"center"}}><div className="label">年齢</div><div style={{fontWeight:700}}>50歳 以下</div></div>
+      <div className="box" style={{textAlign:"center"}}><div className="label">健康</div><div style={{fontWeight:700}}>感染症なし</div></div>
+    </div>
+  </div>
+);
+
+const RulesAccord = () => (
+  <div className="stack">
+    <div className="sectionLabel">注意事項</div>
+    <div className="accord">
+      {["ドレスコード","予約 / 当日見学","決済方法","再入場","クローク","禁煙","映像・写真撮影","飲食","触れ合い","持ち物管理","免責","外出時","その他"].map((t,i)=>(
+        <div className="item" key={i}><span>■ {t}</span><span className="plus">＋</span></div>
+      ))}
+    </div>
+  </div>
+);
+
+const VacuumNotice = () => (
+  <div className="stack">
+    <div className="sectionLabel red" style={{borderColor:"#e0432b",color:"#e0432b"}}>⚠ バキュームベッド注意点</div>
+    <div className="box colored red">
+      <ul style={{margin:0}}>
+        <li>重大な事故の恐れ → スタッフ指示厳守</li>
+        <li>1回最長 10分</li>
+        <li>機械操作はスタッフのみ</li>
+        <li>呼吸口は絶対にふさがない</li>
+        <li>酒気帯び・既往歴・ラテックスアレルギーNG</li>
+        <li>当日同意書サイン必須</li>
+      </ul>
+    </div>
+  </div>
+);
+
+const ContactBlock = () => (
+  <div className="stack">
+    <div className="sectionLabel">お問い合わせ</div>
+    <div className="box">
+      <div>・Shun &nbsp;@shun_rubber</div>
+      <div>・リンリン &nbsp;@rinrin_rubber</div>
+      <div>・ALT-FETISH &nbsp;@ALTFETISH</div>
+    </div>
+  </div>
+);
+
+const DressBlock = () => (
+  <div className="stack">
+    <div className="sectionLabel">体験時の服装</div>
+    <div className="box">
+      <div className="row" style={{flexWrap:"wrap",gap:4}}>
+        {["ラバー","全身タイツ","水着","レオタード","下着+靴下","スポーツウェア"].map(t=>(
+          <span className="pill" key={t}>{t}</span>
+        ))}
+      </div>
+      <div className="divider"></div>
+      <div className="annot">局部のはみだしNG / ソックス必須 / 金属類は外す</div>
+    </div>
+  </div>
+);
+
+/* ---------- VARIATION A: Classic vertical scroll ---------- */
+const VariantA = () => (
+  <div className="wf stack">
+    <HeroBurst/>
+    <div className="cta red">▶ 詳細は下へ</div>
+
+    <div className="divider"></div>
+    <div className="stack">
+      <div className="sectionLabel">イベント概要</div>
+      <div className="box">バキューム &amp; ヒトイヌ がコラボした体験会。<br/>2日間で計12部を開催。</div>
+    </div>
+
+    <div className="divider"></div>
+    <ScheduleBlock/>
+
+    <div className="divider"></div>
+    <AccessBlock/>
+
+    <div className="divider"></div>
+    <ItemsBlock/>
+
+    <div className="divider"></div>
+    <DressBlock/>
+
+    <div className="divider"></div>
+    <ConditionsBlock/>
+
+    <div className="divider"></div>
+    <VacuumNotice/>
+
+    <div className="divider"></div>
+    <RulesAccord/>
+
+    <div className="divider"></div>
+    <ContactBlock/>
+
+    <div className="cta yellow" style={{marginTop:6}}>予約サイトへ →</div>
+    <Disclaimer/>
+    <div className="footer">© 2026 バキューム&ヒトイヌ体験会</div>
+  </div>
+);
+
+/* ---------- VARIATION B: Comic Panel Grid ---------- */
+const VariantB = () => (
+  <div className="wf stack" style={{background:"#fff8e6"}}>
+    {/* hero panel */}
+    <div className="panel" style={{background:"#cdeded"}}>
+      <span className="panelHead">PANEL 01 — HERO</span>
+      <HeroBurst/>
+    </div>
+
+    {/* 2x2 panel grid */}
+    <div className="grid2">
+      <div className="panel" style={{background:"#fff4b3"}}>
+        <span className="panelHead">02</span>
+        <div style={{fontFamily:"Kalam",fontWeight:700,fontSize:14}}>WHEN?</div>
+        <div style={{fontSize:11}}>6/27 ×8部<br/>6/28 ×4部</div>
+        <div className="annot" style={{fontSize:10}}>→ タイムテーブル</div>
+      </div>
+      <div className="panel" style={{background:"#ffe2dd"}}>
+        <span className="panelHead">03</span>
+        <div style={{fontFamily:"Kalam",fontWeight:700,fontSize:14}}>WHERE?</div>
+        <div style={{fontSize:11}}>芳賀書店 6F<br/>神保町 A1 0秒</div>
+      </div>
+      <div className="panel" style={{background:"#fff"}}>
+        <span className="panelHead">04</span>
+        <div style={{fontFamily:"Kalam",fontWeight:700,fontSize:14}}>WHAT?</div>
+        <div style={{fontSize:11}}>バキュームベッド<br/>＋ ヒトイヌ コラボ</div>
+      </div>
+      <div className="panel" style={{background:"#fff"}}>
+        <span className="panelHead">05</span>
+        <div style={{fontFamily:"Kalam",fontWeight:700,fontSize:14}}>HOW?</div>
+        <div style={{fontSize:11}}>10分 × 2set<br/>予約サイトのみ</div>
+      </div>
+    </div>
+
+    {/* wide schedule panel */}
+    <div className="panel">
+      <span className="panelHead">PANEL 06 — TIMETABLE</span>
+      <ScheduleBlock/>
+    </div>
+
+    {/* mixed grid: items + dress */}
+    <div className="panel"><span className="panelHead">07 — 持ち物</span><ItemsBlock/></div>
+    <div className="panel"><span className="panelHead">08 — 服装</span><DressBlock/></div>
+
+    {/* conditions */}
+    <div className="panel" style={{background:"#cdeded"}}>
+      <span className="panelHead">09 — 参加条件</span>
+      <ConditionsBlock/>
+    </div>
+
+    {/* warning callout */}
+    <div className="panel" style={{background:"#ffe2dd",border:"2px solid #e0432b"}}>
+      <span className="panelHead" style={{background:"#e0432b"}}>!! BIG WARNING</span>
+      <VacuumNotice/>
+    </div>
+
+    {/* rules — full panel accordion */}
+    <div className="panel">
+      <span className="panelHead">10 — RULES</span>
+      <RulesAccord/>
+    </div>
+
+    {/* access wide */}
+    <div className="panel">
+      <span className="panelHead">11 — ACCESS</span>
+      <AccessBlock/>
+    </div>
+
+    {/* contact + CTA panel */}
+    <div className="panel" style={{background:"#fff4b3",textAlign:"center"}}>
+      <span className="panelHead">12 — JOIN US</span>
+      <div className="speech" style={{display:"inline-block",margin:"8px auto"}}>お申込み<br/>お待ちしてます！！</div>
+      <div className="cta red" style={{marginTop:6}}>予約サイトへ →</div>
+      <ContactBlock/>
+    </div>
+
+    <Disclaimer/>
+  </div>
+);
+
+/* ---------- VARIATION C: Sticky tab nav, info-dense ---------- */
+const VariantC = () => (
+  <div className="wf stack">
+    <HeroBurst/>
+    <div className="cta yellow">▶ 予約サイトへ</div>
+
+    {/* sticky tabs */}
+    <div className="stickyNav">
+      <div className="label" style={{marginBottom:4}}>＜スクロール追従タブ＞</div>
+      <div className="navBar">
+        <div className="tab active">概要</div>
+        <div className="tab">日程</div>
+        <div className="tab">会場</div>
+        <div className="tab">持ち物</div>
+        <div className="tab">服装</div>
+        <div className="tab">ルール</div>
+        <div className="tab">⚠</div>
+      </div>
+    </div>
+
+    {/* compressed dense sections — anchored */}
+    <div className="box solid colored teal">
+      <div className="label"># overview</div>
+      <div style={{fontWeight:700}}>2日間 / 12部 / 各回10分×2set</div>
+      <div style={{fontSize:11}}>担当: Shun &amp; リンリン　主催: ALT-FETISH</div>
+    </div>
+
+    <div className="box">
+      <div className="label"># schedule</div>
+      <ScheduleBlock/>
+    </div>
+
+    <div className="box">
+      <div className="label"># venue</div>
+      <AccessBlock/>
+    </div>
+
+    <div className="box">
+      <div className="label"># bring</div>
+      <ItemsBlock/>
+    </div>
+
+    <div className="box">
+      <div className="label"># outfit</div>
+      <DressBlock/>
+    </div>
+
+    <div className="box">
+      <div className="label"># requirements</div>
+      <ConditionsBlock/>
+    </div>
+
+    <div className="box">
+      <div className="label"># rules</div>
+      <RulesAccord/>
+    </div>
+
+    <div className="box solid colored red">
+      <div className="label"># critical</div>
+      <VacuumNotice/>
+    </div>
+
+    <div className="box">
+      <div className="label"># contact</div>
+      <ContactBlock/>
+    </div>
+
+    {/* floating CTA */}
+    <div className="box solid" style={{position:"sticky",bottom:0,background:"#fff4b3",textAlign:"center",border:"2px solid var(--line)"}}>
+      <div style={{fontWeight:700}}>＜画面下に固定 CTA バー＞</div>
+      <div className="cta red" style={{marginTop:4}}>予約する →</div>
+    </div>
+
+    <Disclaimer/>
+  </div>
+);
+
+/* ---------- VARIATION D: Storytelling scroll ---------- */
+const VariantD = () => (
+  <div className="wf stack" style={{background:"#fbf8f1"}}>
+    {/* big bold hero */}
+    <HeroBurst/>
+
+    {/* Scene 1: WHAT */}
+    <div className="stack">
+      <div className="speech" style={{alignSelf:"flex-start"}}>そもそも、なに？</div>
+      <div className="box solid">
+        <div style={{fontFamily:"Kalam",fontWeight:700,fontSize:16}}>
+          バキュームベッド × ヒトイヌ。<br/>2 つのフェチが、1 つの会場に集結する 2 日間。
+        </div>
+        <div className="row" style={{marginTop:8}}>
+          <div className="img" style={{flex:1,height:90}}>体験イメージ A</div>
+          <div className="img" style={{flex:1,height:90}}>体験イメージ B</div>
+        </div>
+      </div>
+    </div>
+
+    {/* Scene 2: WHEN — big day cards */}
+    <div className="stack">
+      <div className="speech" style={{alignSelf:"flex-end"}}>いつ、やる？</div>
+      <div className="grid2">
+        <div className="box colored teal" style={{textAlign:"center",padding:14}}>
+          <div className="label">DAY 1</div>
+          <div style={{fontSize:22,fontFamily:"Kalam",fontWeight:700}}>6 / 27</div>
+          <div style={{fontSize:12}}>10:00 – 19:00<br/>全 8 部</div>
+        </div>
+        <div className="box colored yellow" style={{textAlign:"center",padding:14}}>
+          <div className="label">DAY 2</div>
+          <div style={{fontSize:22,fontFamily:"Kalam",fontWeight:700}}>6 / 28</div>
+          <div style={{fontSize:12}}>15:00 – 18:00<br/>全 4 部</div>
+        </div>
+      </div>
+      <div className="annot">→ タップで各日タイムテーブル展開</div>
+    </div>
+
+    {/* Scene 3: WHERE */}
+    <div className="stack">
+      <div className="speech" style={{alignSelf:"flex-start"}}>どこに行けばいい？</div>
+      <AccessBlock/>
+    </div>
+
+    {/* Scene 4: BRING + WEAR (combined) */}
+    <div className="stack">
+      <div className="speech" style={{alignSelf:"flex-end"}}>何を持って・何を着る？</div>
+      <ItemsBlock/>
+      <DressBlock/>
+    </div>
+
+    {/* Scene 5: CHECK */}
+    <div className="stack">
+      <div className="speech" style={{alignSelf:"flex-start"}}>参加できるかチェック！</div>
+      <ConditionsBlock/>
+    </div>
+
+    {/* Scene 6: BIG WARNING */}
+    <div className="stack">
+      <div className="stamp" style={{alignSelf:"center",fontSize:14}}>READ ME!!</div>
+      <VacuumNotice/>
+    </div>
+
+    {/* Scene 7: RULES */}
+    <div className="stack">
+      <div className="speech" style={{alignSelf:"flex-end"}}>会場でのお約束</div>
+      <RulesAccord/>
+    </div>
+
+    {/* Scene 8: CTA close */}
+    <div className="stack" style={{alignItems:"center"}}>
+      <div className="speech" style={{fontSize:16}}>お申込み<br/>お待ちしてます！！</div>
+      <div className="cta red" style={{width:"80%"}}>予約サイトへ →</div>
+      <ContactBlock/>
+    </div>
+
+    <Disclaimer/>
+  </div>
+);
+
+/* ---------- legend ---------- */
+const Legend = () => (
+  <div className="legend">
+    <h2>LP ワイヤーフレーム — 4 案</h2>
+    <p>イベント：<b>バキューム &amp; ヒトイヌ 驚異のコラボ大体験会 in 芳賀書店 6 階</b>（6/27, 6/28）</p>
+    <p>トンマナ：アメコミ / ポップアート（ターコイズ × イエロー × レッド・ハーフトーン・集中線・吹き出し）</p>
+    <p>※ ワイヤーは構造優先のラフ。配色・装飾は次フェーズで本実装します。</p>
+    <div className="chips">
+      <div className="chip"><span className="swatch" style={{background:"#3fb6b6"}}></span>Teal #3FB6B6</div>
+      <div className="chip"><span className="swatch" style={{background:"#f5d623"}}></span>Yellow #F5D623</div>
+      <div className="chip"><span className="swatch" style={{background:"#e0432b"}}></span>Red #E0432B</div>
+      <div className="chip"><span className="swatch" style={{background:"#fbf8f1"}}></span>Paper #FBF8F1</div>
+    </div>
+  </div>
+);
+
+/* ---------- canvas ---------- */
+const App = () => (
+  <DesignCanvas title="LP Wireframes / バキューム&ヒトイヌ体験会" subtitle="4 つのレイアウト方針を比較">
+    <DCSection id="intro" title="プロジェクト概要">
+      <DCArtboard id="legend" label="読みかた" width={760} height={360}>
+        <Legend/>
+      </DCArtboard>
+    </DCSection>
+
+    <DCSection id="variants" title="案 A — D｜縦長 LP のラフ">
+      <DCArtboard id="A" label="A. 王道・縦スクロール" width={420} height={2900}>
+        <VariantA/>
+      </DCArtboard>
+      <DCArtboard id="B" label="B. コミックパネル・グリッド" width={420} height={3100}>
+        <VariantB/>
+      </DCArtboard>
+      <DCArtboard id="C" label="C. 追従タブ・情報密度高め" width={420} height={3000}>
+        <VariantC/>
+      </DCArtboard>
+      <DCArtboard id="D" label="D. ストーリー・スクロール" width={420} height={3000}>
+        <VariantD/>
+      </DCArtboard>
+    </DCSection>
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

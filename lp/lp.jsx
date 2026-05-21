@@ -218,7 +218,7 @@ const Hero = () =>
         </div>
       </div>
 
-      <a href="#book" style={{ display: "block", marginTop: 22, textDecoration: "none" }}>
+      <a href="#what" style={{ display: "block", marginTop: 22, textDecoration: "none" }}>
         <div style={{
         background: "var(--accent-3)", color: "#fff",
         border: "3px solid var(--ink)", borderRadius: 99, padding: "14px 22px",
@@ -234,7 +234,7 @@ const Hero = () =>
 
 /* ---------- WHAT ---------- */
 const SectionWhat = () =>
-<section data-screen-label="02 What" style={{ padding: "56px 22px 48px", background: "var(--paper)", position: "relative", overflow: "hidden" }}>
+<section id="what" data-screen-label="02 What" style={{ padding: "56px 22px 48px", background: "var(--paper)", position: "relative", overflow: "hidden" }}>
     <SectionHead eyebrow="01 — WHAT" title={<>そもそも、<br />なにする会？</>} />
     <p style={{ fontSize: 15, lineHeight: 1.8, margin: "0 0 18px" }}>
       <b>バキュームベッド</b> と <b>ヒトイヌ</b> という 2 つのフェチが、<br />

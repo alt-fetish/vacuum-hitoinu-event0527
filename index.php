@@ -63,6 +63,15 @@ $reservationPageTitle = 'バキューム＆ヒトイヌ体験会予約ページ'
         </div>
     </div>
 
+    <!-- Updates -->
+    <div class="section">
+        <h2 class="section-title">更新情報</h2>
+        <div class="msg msg-error">
+            <p>6月27日（土）18:00の枠につきまして、誤ってお申し込みいただける状態となっておりました。お詫びして訂正いたします。</p>
+            <p class="mt-16">すでに当該枠へお申し込みいただいた方には、別枠へのご移動をお願いしているところです。ご迷惑をおかけし、申し訳ございません。</p>
+        </div>
+    </div>
+
     <!-- Slot Availability -->
     <div class="section">
         <h2 class="section-title">空き状況</h2>

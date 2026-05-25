@@ -150,6 +150,11 @@ function getEventDaysWithAvailability(): array
     foreach (EVENT_DAYS as $day) {
         $slots = [];
         foreach ($day['hours'] as $hour) {
+            // 6/27 18:00は既存予約を保持したまま予約ページ上では案内しない。
+            if ($day['date'] === '2026-06-27' && $hour === 18) {
+                continue;
+            }
+
             $booked = $counts[$day['date']][$hour] ?? 0;
             $remaining = SLOT_CAPACITY - $booked;
             $slots[] = [
